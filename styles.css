@@ -51,6 +51,4 @@ body {
     /* axis compensation */
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
-    /* animate */
-    transition: 1s stroke-dashoffset linear;
 }

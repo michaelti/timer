@@ -1,26 +1,26 @@
 const textEl = document.querySelector(".timer-text");
 const ringEl = document.querySelector(".timer-ring__circle");
 // From URL ?t=[minutes] or 5 minutes by default
-const duration = new URLSearchParams(window.location.search).get("t") * 60 || 300;
+const duration = new URLSearchParams(window.location.search).get("t") * 60000 || 300000;
+const endTime = Date.now() + duration;
 
-function clockTimer(timeRemaining) {
-    if (timeRemaining < 0) return;
-
-    setText(timeRemaining);
-    setRing(1 - timeRemaining / duration);
-
-    setTimeout(() => clockTimer(timeRemaining - 1), 1000);
+function easeInOutCubic(t, b, c, d) {
+    if ((t /= d / 2) < 1) return (c / 2) * t * t * t + b;
+    return (c / 2) * ((t -= 2) * t * t + 2) + b;
 }
 
 function setText(timeRemaining) {
-    const minutes = Math.floor(timeRemaining / 60);
-    const seconds = timeRemaining % 60;
+    const secondsRemaining = Math.ceil(timeRemaining / 1000);
 
-    const strMinutes = String(minutes).padStart(1, "0");
-    const strSeconds = String(seconds).padStart(2, "0");
-    const clock = strMinutes + ":" + strSeconds;
+    const clockMinutes = Math.floor(secondsRemaining / 60);
+    const clockSeconds = secondsRemaining % 60;
 
-    textEl.innerText = clock;
+    const strMinutes = String(clockMinutes).padStart(1, "0");
+    const strSeconds = String(clockSeconds).padStart(2, "0");
+
+    const strClock = strMinutes + ":" + strSeconds;
+
+    textEl.innerText = strClock;
 }
 
 function setRing(progress) {
@@ -30,4 +30,29 @@ function setRing(progress) {
     ringEl.style.strokeDashoffset = circumference - progress * circumference;
 }
 
-clockTimer(duration);
+function animate() {
+    const timeRemaining = endTime - Date.now();
+    const timeElapsed = duration - timeRemaining;
+
+    // End animation when the time is over
+    if (timeRemaining <= 0) {
+        setText(0);
+        setRing(1);
+        return;
+    }
+
+    // Intro animation for one second
+    if (timeElapsed <= 1000) {
+        setText(timeRemaining);
+        setRing(easeInOutCubic(timeElapsed, 1, 1 + timeElapsed / duration, 1000));
+        requestAnimationFrame(animate);
+        return;
+    }
+
+    setText(timeRemaining);
+    setRing(timeElapsed / duration);
+
+    requestAnimationFrame(animate);
+}
+
+animate();
