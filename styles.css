@@ -17,6 +17,11 @@ body {
     overflow: hidden;
 }
 
+/* Fullscreen mode */
+body::backdrop {
+    background-color: #1358db;
+}
+
 .main-container {
     height: 100vh;
     display: flex;

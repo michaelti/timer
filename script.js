@@ -56,3 +56,8 @@ function animate() {
 }
 
 animate();
+
+// Fullscreen mode
+window.addEventListener("dblclick", () => {
+    document.body.requestFullscreen();
+});
