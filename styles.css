@@ -22,6 +22,11 @@ body::backdrop {
     background-color: #1358db;
 }
 
+/*Fullscreen dark mode*/
+body.dark::backdrop {
+    background-color: #000;
+}
+
 .main-container {
     height: 100vh;
     display: flex;
