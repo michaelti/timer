@@ -2,23 +2,21 @@ const textEl = document.querySelector(".timer-text");
 const ringEl = document.querySelector(".timer-ring__circle");
 const ringElBackground = document.querySelector(".timer-ring__background");
 
-// dark mode colors
-const backgroundColor = "#000";
-const strokeBackground = "#262626";
-const strokeColor = "#fff";
+// From URL dark=true
 
 const darkMode =
   new URLSearchParams(window.location.search).get("dark") === "true";
 
 if (darkMode) {
-  ringEl.style.stroke = strokeColor;
-  ringElBackground.style.stroke = strokeBackground;
-  document.body.style.backgroundColor = backgroundColor;
+  ringEl.classList.add("dark");
+  ringElBackground.classList.add("dark");
+  document.body.classList.add("dark");
 }
 
 // From URL ?t=[minutes] or 5 minutes by default
 const duration =
   new URLSearchParams(window.location.search).get("t") * 60000 || 300000;
+
 const endTime = Date.now() + duration;
 
 function easeInOutCubic(t, b, c, d) {
@@ -76,6 +74,5 @@ animate();
 
 // Fullscreen mode
 window.addEventListener("dblclick", () => {
-  if (darkMode) document.body.classList.add("dark");
   document.body.requestFullscreen();
 });
