@@ -1,9 +1,7 @@
 const textEl = document.querySelector(".timer-text");
 const ringEl = document.querySelector(".timer-ring__circle");
 const ringElBackground = document.querySelector(".timer-ring__background");
-
 // From URL dark=true
-
 const darkMode =
   new URLSearchParams(window.location.search).get("dark") === "true";
 
