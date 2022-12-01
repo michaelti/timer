@@ -57,3 +57,16 @@ body::backdrop {
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
 }
+
+/* Dark mode */
+body.dark, body.dark::backdrop {
+    background-color: #000000;
+}
+
+.timer-ring__circle.dark {
+    stroke: #fff;
+}
+
+.timer-ring__background.dark {
+    stroke: #262626;
+}
