@@ -58,9 +58,7 @@ body::backdrop {
     transform-origin: 50% 50%;
 }
 
-/* dark mode */
-
-/* Fullscreen mode */
+/* Dark mode */
 body.dark, body.dark::backdrop {
     background-color: #000000;
 }
