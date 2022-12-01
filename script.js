@@ -1,15 +1,16 @@
 const textEl = document.querySelector(".timer-text");
 const ringEl = document.querySelector(".timer-ring__circle");
 const ringElBackground = document.querySelector(".timer-ring__background");
+
 // From URL dark=true
-const darkMode =
-  new URLSearchParams(window.location.search).get("theme") === "dark";
+const darkMode = new URLSearchParams(window.location.search).get("theme") === "dark";
 
 if (darkMode) {
-  ringEl.classList.add("dark");
-  ringElBackground.classList.add("dark");
-  document.body.classList.add("dark");
+    ringEl.classList.add("dark");
+    ringElBackground.classList.add("dark");
+    document.body.classList.add("dark");
 }
+
 // From URL ?t=[minutes] or 5 minutes by default
 const duration = new URLSearchParams(window.location.search).get("t") * 60000 || 300000;
 const endTime = Date.now() + duration;
