@@ -32,6 +32,7 @@ function setText(timeRemaining) {
     const strClock = strMinutes + ":" + strSeconds;
 
     textEl.innerText = strClock;
+    document.title = `Break Timer - ${strClock}`;
 }
 
 function setRing(progress) {
