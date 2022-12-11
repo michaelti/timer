@@ -32,6 +32,7 @@ function setText(timeRemaining) {
     const strClock = strMinutes + ":" + strSeconds;
 
     textEl.innerText = strClock;
+    document.title = `Break Timer - ${strClock}`;
 }
 
 function setRing(progress) {
@@ -66,9 +67,21 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
+function handleVisibilityChange() {
+    if (document.hidden) {
+        setTimeout(() => {
+            animate();
+            handleVisibilityChange();
+        }, 60);
+    }
+}
+
 animate();
 
 // Fullscreen mode
 window.addEventListener("dblclick", () => {
     document.body.requestFullscreen();
 });
+
+// Running the loop when the tab is inactive
+document.addEventListener("visibilitychange", handleVisibilityChange, false);
