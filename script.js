@@ -297,3 +297,26 @@ editFormEl.addEventListener("submit", (event) => {
   event.preventDefault();
   editEl.blur();
 });
+
+/*
+ *
+ * Edit Feature Notice
+ *
+ */
+
+function createEditFeatureNotice() {
+  if (localStorage.getItem("seen-feature-edit")) {
+    return;
+  }
+
+  const noticeEl = document.createElement("aside");
+  noticeEl.classList.add("feature-notice");
+  noticeEl.innerText = "New! Change the time by typing inside the clock";
+  document.body.appendChild(noticeEl);
+
+  setTimeout(() => {
+    localStorage.setItem("seen-feature-edit", "true");
+  }, 10000);
+}
+
+createEditFeatureNotice();
