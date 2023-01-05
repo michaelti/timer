@@ -1,5 +1,6 @@
 const textEl = document.querySelector(".timer-text");
-const ringEl = document.querySelector(".timer-ring__circle");
+const ringEl = document.querySelector(".timer-ring");
+const ringElCircle = document.querySelector(".timer-ring__circle");
 const ringElBackground = document.querySelector(".timer-ring__background");
 
 // From URL dark=true
@@ -31,15 +32,49 @@ function setText(timeRemaining) {
 
     const strClock = strMinutes + ":" + strSeconds;
 
+    // Optimization: if time hasn't changed, don't update
+    if (textEl.innerText === strClock) {
+        return;
+    }
+
     textEl.innerText = strClock;
-    document.title = `Break Timer - ${strClock}`;
+    document.title = `Break | ${strClock}`;
 }
 
 function setRing(progress) {
-    const circumference = ringEl.getBBox().width * Math.PI;
+    const circumference = ringElCircle.getBBox().width * Math.PI;
 
-    ringEl.style.strokeDasharray = `${circumference} ${circumference}`;
-    ringEl.style.strokeDashoffset = circumference - progress * circumference;
+    ringElCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+    ringElCircle.style.strokeDashoffset = circumference - progress * circumference;
+
+    ringElBackground.style.strokeDasharray = `${circumference} ${circumference}`;
+    ringElBackground.style.strokeDashoffset = (circumference * 2) - progress * circumference;
+}
+
+function setFavicon(progress) {
+    const miniRingEl = ringEl.cloneNode(true);
+    const miniRingCircleEl = miniRingEl.querySelector(".timer-ring__circle");
+    const miniRingBackgroundEl = miniRingEl.querySelector(".timer-ring__background");
+    const ICON_SIZE = 64; // Arbitrary constant
+
+    // Modify the cloned ring to look better at small size
+    miniRingEl.setAttribute("height", ICON_SIZE);
+    miniRingEl.setAttribute("width", ICON_SIZE);
+    miniRingCircleEl.style.strokeWidth = "33%";
+    miniRingBackgroundEl.style.strokeWidth = "33%";
+
+    const circumference = ICON_SIZE * Math.PI;
+
+    miniRingCircleEl.style.strokeDasharray = `${circumference} ${circumference}`;
+    miniRingCircleEl.style.strokeDashoffset = circumference - progress * circumference;
+  
+    miniRingBackgroundEl.style.strokeDasharray = `${circumference} ${circumference}`;
+    miniRingBackgroundEl.style.strokeDashoffset = (circumference * 2) - progress * circumference;
+  
+    const SVG = new XMLSerializer().serializeToString(miniRingEl);
+    const dataURL = "data:image/svg+xml;base64," + btoa(SVG);
+    const favicon = document.querySelector("link[rel=icon]");
+    favicon.setAttribute("href", dataURL);
 }
 
 function animate() {
@@ -50,6 +85,7 @@ function animate() {
     if (timeRemaining <= 0) {
         setText(0);
         setRing(1);
+        setFavicon(1);
         return;
     }
 
@@ -57,31 +93,29 @@ function animate() {
     if (timeElapsed <= 1000) {
         setText(timeRemaining);
         setRing(easeInOutCubic(timeElapsed, 1, 1 + timeElapsed / duration, 1000));
-        requestAnimationFrame(animate);
-        return;
+        setFavicon(0);
     }
 
-    setText(timeRemaining);
-    setRing(timeElapsed / duration);
-
-    requestAnimationFrame(animate);
-}
-
-function handleVisibilityChange() {
-    if (document.hidden) {
-        setTimeout(() => {
-            animate();
-            handleVisibilityChange();
-        }, 60);
+    // Usual animation
+    if (timeElapsed > 1000) {
+        setText(timeRemaining);
+        setRing(timeElapsed / duration);
+        setFavicon(timeElapsed / duration);
     }
 }
 
-animate();
+function animationLoop() {
+    animate();
+    requestAnimationFrame(animationLoop);
+}
 
 // Fullscreen mode
 window.addEventListener("dblclick", () => {
     document.body.requestFullscreen();
 });
 
-// Running the loop when the tab is inactive
-document.addEventListener("visibilitychange", handleVisibilityChange, false);
+// Force the loop even when the tab is inactive
+setInterval(animate, 1000);
+
+// Main loop
+animationLoop();
