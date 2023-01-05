@@ -25,6 +25,10 @@ let isPaused = false;
 let timePausedAt = null;
 let totalTimePaused = 0;
 
+// Keep track of progress, for animating if the timer resets
+let progress = 0;
+let prevProgress = 0;
+
 function easeInOutCubic(t, b, c, d) {
   if ((t /= d / 2) < 1) return (c / 2) * t * t * t + b;
   return (c / 2) * ((t -= 2) * t * t + 2) + b;
@@ -111,27 +115,34 @@ function animate() {
 
   const timeRemaining = endTime - Date.now() + totalTimePaused;
   const timeElapsed = duration - timeRemaining;
+  progress = timeElapsed / duration;
 
   // End animation when the time is over
   if (timeRemaining <= 0) {
     setText(0);
     setRing(1);
     setFavicon(1);
+    progress = 1;
     return;
   }
 
   // Intro animation for one second
   if (timeElapsed <= 1000) {
+    const keyframeStart = prevProgress ? prevProgress : 1;
+    const keyframeEnd = prevProgress
+      ? 2 + progress - prevProgress
+      : 1 + progress;
+
     setText(timeRemaining);
-    setRing(easeInOutCubic(timeElapsed, 1, 1 + timeElapsed / duration, 1000));
+    setRing(easeInOutCubic(timeElapsed, keyframeStart, keyframeEnd, 1000));
     setFavicon(0);
   }
 
   // Usual animation
   if (timeElapsed > 1000) {
     setText(timeRemaining);
-    setRing(timeElapsed / duration);
-    setFavicon(timeElapsed / duration);
+    setRing(progress);
+    setFavicon(progress);
   }
 }
 
@@ -264,6 +275,7 @@ editEl.addEventListener("focus", () => {
 editEl.addEventListener("blur", (event) => {
   isPaused = false;
   totalTimePaused += Date.now() - timePausedAt;
+  prevProgress = progress;
 
   // Update the clock
   updateTime(event.target.value);
