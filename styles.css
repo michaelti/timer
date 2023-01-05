@@ -1,57 +1,59 @@
 *,
 *::before,
 *::after {
-    box-sizing: inherit;
+  box-sizing: inherit;
 }
 
 html {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    background-color: #1358db;
-    color: #fff;
-    font-family: "Avenir Next", -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
-        helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
-    overflow: hidden;
+  margin: 0;
+  background-color: #1358db;
+  color: #fff;
+  font-family: "Avenir Next", -apple-system, BlinkMacSystemFont, avenir next,
+    avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial,
+    sans-serif;
+  overflow: hidden;
 }
 
 /* Fullscreen mode */
 body::backdrop {
-    background-color: #1358db;
+  background-color: #1358db;
 }
 
 .main-container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .timer-text {
-    font-size: 6rem;
-    font-weight: 600;
-    font-feature-settings: "tnum";
-    font-variant-numeric: tabular-nums;
+  font-size: 6rem;
+  font-weight: 600;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
 }
 
 .timer-ring {
-    position: absolute;
-    z-index: -1;
-    width: 25rem;
-    height: 25rem;
+  position: absolute;
+  z-index: -1;
+  width: 25rem;
+  height: 25rem;
 }
 
 /* Dark mode */
-body.dark, body.dark::backdrop {
-    background-color: #000000;
+body.dark,
+body.dark::backdrop {
+  background-color: #000000;
 }
 
 .timer-ring__circle.dark {
-    stroke: #fff;
+  stroke: #fff;
 }
 
 .timer-ring__background.dark {
-    stroke: #262626;
+  stroke: #262626;
 }
