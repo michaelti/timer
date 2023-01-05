@@ -40,7 +40,13 @@ function setInitialValues() {
   const durationFromStorage = Number(localStorage.getItem("custom-duration"));
   const durationDefault = 300000; // 5 minutes
 
-  duration = durationFromURL || durationFromStorage || durationDefault;
+  // If this is the first load
+  if (!prevProgress) {
+    duration = durationFromURL || durationFromStorage || durationDefault;
+  } else {
+    duration = durationFromStorage || durationFromURL || durationDefault;
+  }
+
   duration = Math.min(duration, 5999000); // max 99m59s
   startTime = Date.now();
   endTime = startTime + duration;
