@@ -43,21 +43,6 @@ body::backdrop {
     height: 25rem;
 }
 
-.timer-ring__background {
-    stroke-width: 2rem;
-    fill: transparent;
-    stroke: #003fc2;
-}
-
-.timer-ring__circle {
-    stroke-width: 2rem;
-    fill: transparent;
-    stroke: #ffcf00;
-    /* axis compensation */
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
-}
-
 /* Dark mode */
 body.dark, body.dark::backdrop {
     background-color: #000000;
