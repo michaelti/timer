@@ -282,6 +282,9 @@ editEl.addEventListener("blur", (event) => {
 
   // Reset the form
   event.target.value = "";
+
+  // Reset the input state
+  inputValue = "";
 });
 
 editFormEl.addEventListener("submit", (event) => {
