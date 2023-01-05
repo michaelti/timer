@@ -53,7 +53,7 @@ body::backdrop {
   font: inherit;
   color: inherit;
   width: calc(var(--timer-size) * 0.7);
-  height: calc(var(--timer-size) / 4);
+  height: calc(var(--timer-size) / 2.5);
   font-size: calc(var(--timer-size) / 4);
   border: none;
   border-radius: 0.25rem;
