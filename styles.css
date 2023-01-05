@@ -52,18 +52,19 @@ body::backdrop {
 .timer-edit {
   font: inherit;
   color: inherit;
-  width: calc(var(--timer-size) * 0.7);
-  height: calc(var(--timer-size) / 2.5);
+  width: calc(var(--timer-size) * 0.8);
+  height: calc(var(--timer-size) * 0.8);
   font-size: calc(var(--timer-size) / 4);
   border: none;
   padding: 0;
-  border-radius: 0.25rem;
+  border-radius: 50%;
   background-color: #003fc2;
   font-weight: 600;
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
   text-align: center;
   opacity: 0;
+  transition: opacity 0.1s;
 }
 
 .timer-edit::placeholder {
