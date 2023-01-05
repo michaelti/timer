@@ -37,7 +37,7 @@ function setInitialValues() {
   const durationDefault = 300000; // 5 minutes
 
   duration = durationFromURL || durationFromStorage || durationDefault;
-  duration = Math.min(duration, 5999000); // max 99m99s
+  duration = Math.min(duration, 5999000); // max 99m59s
   startTime = Date.now();
   endTime = startTime + duration;
 
@@ -204,9 +204,53 @@ function updateTime(value) {
 }
 
 editEl.addEventListener("input", (event) => {
+  // If invalid characters, exit
   if (!checkValidInput(event.target.value)) {
     event.target.value = inputValue;
     return;
+  }
+
+  // If more than one colon, exit
+  if ((event.target.value.match(/:/g) || []).length > 1) {
+    event.target.value = inputValue;
+    return;
+  }
+
+  // If more than two digits beside colon, exit
+  if (event.target.value.includes(":")) {
+    const split = event.target.value.split(":");
+    const beforeColon = split[0];
+    const afterColon = split[1];
+
+    if (beforeColon && beforeColon.length > 2) {
+      event.target.value = inputValue;
+      return;
+    }
+
+    if (afterColon && afterColon.length > 2) {
+      event.target.value = inputValue;
+      return;
+    }
+  }
+
+  // If DELETING, skip helpers
+  if (event.target.value.length < inputValue.length) {
+    console.log("del");
+    inputValue = event.target.value;
+    return;
+  }
+
+  // If colon entered first, add a 0 before it
+  if (event.target.value.length === 1 && event.target.value === ":") {
+    event.target.value = "0:";
+  }
+
+  // If first two digits entered, add a colon
+  if (event.target.value.length >= 2 && !event.target.value.includes(":")) {
+    let modifiedString = event.target.value.split("");
+    modifiedString.splice(2, 0, ":");
+    modifiedString = modifiedString.join("");
+    event.target.value = modifiedString;
   }
 
   inputValue = event.target.value;
