@@ -6,6 +6,7 @@
 
 html {
   box-sizing: border-box;
+  --timer-size: min(75vmin, 25rem);
 }
 
 body {
@@ -31,7 +32,7 @@ body::backdrop {
 }
 
 .timer-text {
-  font-size: 6rem;
+  font-size: calc(var(--timer-size) / 4);
   font-weight: 600;
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
@@ -40,8 +41,8 @@ body::backdrop {
 .timer-ring {
   position: absolute;
   z-index: -1;
-  width: 25rem;
-  height: 25rem;
+  width: var(--timer-size);
+  height: var(--timer-size);
 }
 
 /* Dark mode */
