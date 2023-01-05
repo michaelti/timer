@@ -36,6 +36,47 @@ body::backdrop {
   font-weight: 600;
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  text-align: center;
+  z-index: 1;
+}
+
+.timer-edit-form {
+  position: absolute;
+}
+
+.timer-edit-form:focus-within {
+  z-index: 2;
+}
+
+.timer-edit {
+  font: inherit;
+  color: inherit;
+  width: calc(var(--timer-size) * 0.7);
+  height: calc(var(--timer-size) / 4);
+  font-size: calc(var(--timer-size) / 4);
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #003fc2;
+  font-weight: 600;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  opacity: 0;
+}
+
+.timer-edit::placeholder {
+  color: rgba(0, 0, 0, 0.2);
+  opacity: 1;
+}
+
+.timer-edit:hover {
+  opacity: 1;
+}
+
+.timer-edit:focus {
+  opacity: 1;
+  outline: none;
 }
 
 .timer-ring {

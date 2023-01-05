@@ -1,4 +1,6 @@
 const textEl = document.querySelector(".timer-text");
+const editFormEl = document.querySelector(".timer-edit-form");
+const editEl = document.querySelector(".timer-edit");
 const ringEl = document.querySelector(".timer-ring");
 const ringElCircle = document.querySelector(".timer-ring__circle");
 const ringElBackground = document.querySelector(".timer-ring__background");
@@ -13,14 +15,35 @@ if (darkMode) {
   document.body.classList.add("dark");
 }
 
-// From URL ?t=[minutes] or 5 minutes by default
-const duration =
-  new URLSearchParams(window.location.search).get("t") * 60000 || 300000;
-const endTime = Date.now() + duration;
+// Initial values to be used by the clock
+let duration = 0;
+let startTime = 0;
+let endTime = 0;
+
+// Keep track of when the timer is paused
+let isPaused = false;
+let timePausedAt = null;
+let totalTimePaused = 0;
 
 function easeInOutCubic(t, b, c, d) {
   if ((t /= d / 2) < 1) return (c / 2) * t * t * t + b;
   return (c / 2) * ((t -= 2) * t * t + 2) + b;
+}
+
+function setInitialValues() {
+  const urlParam = new URLSearchParams(window.location.search).get("t");
+  const durationFromURL = urlParam * 60000; // minutes to milliseconds
+  const durationFromStorage = Number(localStorage.getItem("custom-duration"));
+  const durationDefault = 300000; // 5 minutes
+
+  duration = durationFromURL || durationFromStorage || durationDefault;
+  duration = Math.min(duration, 5999000); // max 99m99s
+  startTime = Date.now();
+  endTime = startTime + duration;
+
+  isPaused = false;
+  timePausedAt = null;
+  totalTimePaused = 0;
 }
 
 function setText(timeRemaining) {
@@ -40,6 +63,7 @@ function setText(timeRemaining) {
   }
 
   textEl.innerText = strClock;
+  editEl.placeholder = strClock;
   document.title = `Break | ${strClock}`;
 }
 
@@ -61,15 +85,12 @@ function setFavicon(progress) {
   const miniRingBackgroundEl = miniRingEl.querySelector(
     ".timer-ring__background"
   );
-  const ICON_SIZE = 64; // Arbitrary constant
 
   // Modify the cloned ring to look better at small size
-  miniRingEl.setAttribute("height", ICON_SIZE);
-  miniRingEl.setAttribute("width", ICON_SIZE);
   miniRingCircleEl.style.strokeWidth = "33%";
   miniRingBackgroundEl.style.strokeWidth = "33%";
 
-  const circumference = ICON_SIZE * Math.PI;
+  const circumference = miniRingEl.getAttribute("width") * Math.PI;
 
   miniRingCircleEl.style.strokeDasharray = `${circumference} ${circumference}`;
   miniRingCircleEl.style.strokeDashoffset =
@@ -86,7 +107,9 @@ function setFavicon(progress) {
 }
 
 function animate() {
-  const timeRemaining = endTime - Date.now();
+  if (isPaused) return;
+
+  const timeRemaining = endTime - Date.now() + totalTimePaused;
   const timeElapsed = duration - timeRemaining;
 
   // End animation when the time is over
@@ -118,12 +141,94 @@ function animationLoop() {
 }
 
 // Fullscreen mode
-window.addEventListener("dblclick", () => {
+window.addEventListener("dblclick", (event) => {
+  if (event.target === editEl) return;
   document.body.requestFullscreen();
 });
+
+// Set the intial clock values
+setInitialValues();
 
 // Force the loop even when the tab is inactive
 setInterval(animate, 1000);
 
 // Main loop
 animationLoop();
+
+/*
+ *
+ * Edit Functionality
+ *
+ */
+
+// "State" of input
+let inputValue = "";
+
+function checkValidInput(value) {
+  const regex = /^[0-9:]*$/;
+  return regex.test(value);
+}
+
+function updateTime(value) {
+  // If there's no input, exit
+  if (!value) {
+    return;
+  }
+
+  // If the input contains anything but numbers and colons, exit
+  if (!checkValidInput(value)) {
+    return;
+  }
+
+  // If the input is a simple number, just convert it to minutes
+  if (!isNaN(value)) {
+    const timeInMs = value * 60000;
+    localStorage.setItem("custom-duration", timeInMs);
+    setInitialValues();
+    return;
+  }
+
+  // Parse the string to digits
+  const digits = value.split(":");
+
+  // If there aren't at least two digits, exit
+  if (digits.length < 2) {
+    return;
+  }
+
+  const minutesInMs = digits[0] * 60000;
+  const secondsInMs = digits[1] * 1000;
+  const timeInMs = minutesInMs + secondsInMs;
+  localStorage.setItem("custom-duration", timeInMs);
+  setInitialValues();
+}
+
+editEl.addEventListener("input", (event) => {
+  if (!checkValidInput(event.target.value)) {
+    event.target.value = inputValue;
+    return;
+  }
+
+  inputValue = event.target.value;
+});
+
+editEl.addEventListener("focus", () => {
+  isPaused = true;
+  timePausedAt = Date.now();
+});
+
+editEl.addEventListener("blur", (event) => {
+  isPaused = false;
+  totalTimePaused += Date.now() - timePausedAt;
+
+  // Update the clock
+  updateTime(event.target.value);
+
+  // Reset the form
+  event.target.value = "";
+});
+
+editFormEl.addEventListener("submit", (event) => {
+  event.preventDefault();
+  editEl.blur();
+});
