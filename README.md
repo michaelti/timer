@@ -4,7 +4,7 @@ A simple timer to use for breaks when sharing your screen.
 
 ## Usage
 
-Go to https://dev.michaelti.ca/timer
+Go to https://timer.app.michaelti.ca
 
 The timer defaults to 5 minutes.
 
