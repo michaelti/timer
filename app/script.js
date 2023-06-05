@@ -74,7 +74,7 @@ function setText(timeRemaining) {
 
   textEl.innerText = strClock;
   editEl.placeholder = strClock;
-  document.title = `Break | ${strClock}`;
+  document.title = strClock;
 }
 
 function setRing(progress) {
