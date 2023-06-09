@@ -1,5 +1,5 @@
 <script>
-	export let progress = 0;
+	export let progress;
 
 	$: remainingOffset = Math.PI * 2 - progress * Math.PI;
 	$: elapsedOffset = Math.PI - progress * Math.PI;

@@ -2,6 +2,7 @@
 	import TimerEdit from './TimerEdit.svelte';
 	import TimerText from './TimerText.svelte';
 	import TimerRing from './TimerRing.svelte';
+
 	let text = '0:00';
 	let progress = 0.5;
 </script>

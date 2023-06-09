@@ -1,5 +1,5 @@
 <script>
-	export let text = '0:00';
+	export let text;
 </script>
 
 <form>
