@@ -1,21 +1,19 @@
 <script>
-	import TimerTitle from './TimerTitle.svelte';
 	import TimerEdit from './TimerEdit.svelte';
 	import TimerText from './TimerText.svelte';
 	import TimerRing from './TimerRing.svelte';
 	import timeToText from '../utils/timeToText';
 	import { onMount } from 'svelte';
 
-	let duration = 300000;
+	let duration = 10000;
 	let startTime = Date.now();
 	let endTime = startTime + duration;
 
 	let timeRemaining = duration;
 	let timePausedAt = 0;
 
-	$: timeElapsed = duration - timeRemaining;
 	$: text = timeToText(timeRemaining);
-	$: progress = timeElapsed / duration;
+	$: progress = (duration - timeRemaining) / duration;
 
 	function clock() {
 		if (timePausedAt) return;
@@ -51,11 +49,14 @@
 
 	onMount(() => {
 		animate();
-		setInterval(clock, 1000); // Force even when the tab inactive
+		setInterval(clock, 1000); // Force even when tab is inactive
 	});
 </script>
 
-<TimerTitle {text} {progress} />
+<svelte:head>
+	<title>{text}</title>
+</svelte:head>
+
 <TimerText {text} />
 <TimerEdit {text} on:edit={pause} on:save={unpause} />
 <TimerRing {progress} />
