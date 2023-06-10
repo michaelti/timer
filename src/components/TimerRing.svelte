@@ -10,19 +10,27 @@
 		<circle r="50" cx="50" cy="50" />
 	</clipPath>
 	<circle
-		class="remaining"
+		stroke="#003fc2"
 		r="50"
 		cx="50"
 		cy="50"
+		stroke-width="10"
+		fill="transparent"
+		transform="rotate(-90)"
+		transform-origin="50 50"
 		clip-path="url(#clip-circle)"
 		stroke-dasharray={Math.PI * 100}
 		stroke-dashoffset={remainingOffset * 100}
 	/>
 	<circle
-		class="elapsed"
+		stroke="#ffcf00"
 		r="50"
 		cx="50"
 		cy="50"
+		stroke-width="10"
+		fill="transparent"
+		transform="rotate(-90)"
+		transform-origin="50 50"
 		clip-path="url(#clip-circle)"
 		stroke-dasharray={Math.PI * 100}
 		stroke-dashoffset={elapsedOffset * 100}
@@ -35,22 +43,5 @@
 		z-index: -1;
 		width: var(--timer-size);
 		height: var(--timer-size);
-	}
-
-	.remaining,
-	.elapsed {
-		stroke-width: 10%;
-		fill: transparent;
-		/* axis compensation */
-		transform: rotate(-90deg);
-		transform-origin: 50% 50%;
-	}
-
-	.remaining {
-		stroke: #003fc2;
-	}
-
-	.elapsed {
-		stroke: #ffcf00;
 	}
 </style>
