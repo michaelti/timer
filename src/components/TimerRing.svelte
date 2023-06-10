@@ -21,7 +21,7 @@
 		uri = 'data:image/svg+xml;base64,' + btoa(serialized);
 	}
 
-	afterUpdate(() => setIcon(progress));
+	afterUpdate(() => setIcon());
 </script>
 
 <svelte:head>

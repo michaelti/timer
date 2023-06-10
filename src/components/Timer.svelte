@@ -5,7 +5,7 @@
 	import timeToText from '../utils/timeToText';
 	import { onMount } from 'svelte';
 
-	let duration = 10000;
+	let duration = 300000;
 	let startTime = Date.now();
 	let endTime = startTime + duration;
 
