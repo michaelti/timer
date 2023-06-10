@@ -1,9 +1,74 @@
 <script>
+	import textToTime from '../utils/textToTime';
+	import isValidText from '../utils/isValidText';
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
+
 	export let text;
+	let newText = '';
+	let prevNewText = '';
+	$: newTime = textToTime(newText);
+
+	function handleFocus() {
+		dispatch('edit');
+	}
+
+	function handleBlur() {
+		dispatch('save', newTime);
+		newText = '';
+	}
+
+	function handleInput(event) {
+		// TODO:
+		// - Make the mask better
+		// - Move the mask to a util
+
+		// If inserting text, add helpers
+		if (newText.length > prevNewText.length) {
+			// Helper: If colon entered first, add a 0 before it
+			if (newText[0] === ':') {
+				newText = '0' + newText;
+			}
+
+			// Helper: If first two digits entered, add a colon
+			if (newText.length >= 2 && !newText.includes(':')) {
+				let modifiedString = newText.split('');
+				modifiedString.splice(2, 0, ':');
+				modifiedString = modifiedString.join('');
+				newText = modifiedString;
+			}
+		}
+
+		// Limit to digits and colons
+		newText = newText.replace(/[^0-9:]/g, '');
+
+		// Limit to one colon
+		newText = newText.replace(/:(?=.*:)/g, '');
+
+		// Limit to two digits on each side of colon
+		if (newText.includes(':')) {
+			const split = newText.split(':');
+			let beforeColon = split[0] || '';
+			let afterColon = split[1] || '';
+			beforeColon = beforeColon.substring(0, 2);
+			afterColon = afterColon.substring(0, 2);
+			newText = beforeColon + ':' + afterColon;
+		}
+
+		prevNewText = newText;
+	}
 </script>
 
 <form>
-	<input placeholder={text} maxlength="5" aria-label="Type time, then enter" />
+	<input
+		on:focus={handleFocus}
+		on:blur={handleBlur}
+		placeholder={text}
+		maxlength="5"
+		aria-label="Type the desired time, then press enter"
+		bind:value={newText}
+		on:input={handleInput}
+	/>
 </form>
 
 <style>
