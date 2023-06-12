@@ -5,7 +5,7 @@
 	import timeToText from '../utils/timeToText';
 	import { onMount } from 'svelte';
 
-	let duration = 300000;
+	export let duration;
 	let startTime = Date.now();
 	let endTime = startTime + duration;
 
@@ -29,6 +29,7 @@
 	}
 
 	function setDuration(newDuration) {
+		document.cookie = `custom-duration=${newDuration};max-age=31536000`;
 		duration = Math.min(newDuration, 5999000); // max 99m59s
 		startTime = Date.now();
 		endTime = startTime + duration;
