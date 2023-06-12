@@ -29,7 +29,7 @@
 	}
 
 	function setDuration(newDuration) {
-		document.cookie = `custom-duration=${newDuration};max-age=31536000`;
+		document.cookie = `custom-duration=${newDuration};max-age=31536000;SameSite=Strict`;
 		duration = Math.min(newDuration, 5999000); // max 99m59s
 		startTime = Date.now();
 		endTime = startTime + duration;
