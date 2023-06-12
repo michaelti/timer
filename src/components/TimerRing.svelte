@@ -22,8 +22,8 @@
 		displayProgress = easeCubic(timeElapsed, start, end, introDuration);
 	}
 
-	$: remainingOffset = Math.PI * 2 - displayProgress * Math.PI;
 	$: elapsedOffset = Math.PI - displayProgress * Math.PI;
+	$: remainingOffset = elapsedOffset + Math.PI;
 
 	let svgEl;
 	let uri =
@@ -60,7 +60,7 @@
 		transform="rotate(-90)"
 		transform-origin="50 50"
 		clip-path="url(#clip-circle)"
-		stroke-dasharray={Math.PI * 100}
+		stroke-dasharray="{Math.PI * 100} {Math.PI * 100}"
 		stroke-dashoffset={remainingOffset * 100}
 	/>
 	<circle
@@ -72,7 +72,7 @@
 		transform="rotate(-90)"
 		transform-origin="50 50"
 		clip-path="url(#clip-circle)"
-		stroke-dasharray={Math.PI * 100}
+		stroke-dasharray="{Math.PI * 100} {Math.PI * 100}"
 		stroke-dashoffset={elapsedOffset * 100}
 	/>
 </svg>
