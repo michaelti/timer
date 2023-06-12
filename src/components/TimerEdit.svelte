@@ -30,6 +30,11 @@
 				newText = '0' + newText;
 			}
 
+			// Helper: If first digit is a zero, add a colon
+			if (newText[0] === '0' && newText.length === 1) {
+				newText = newText + ':';
+			}
+
 			// Helper: If first two digits entered, add a colon
 			if (newText.length >= 2 && !newText.includes(':')) {
 				let modifiedString = newText.split('');
