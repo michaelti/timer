@@ -13,7 +13,8 @@
 	let timePausedAt = 0;
 
 	$: text = timeToText(timeRemaining);
-	$: progress = (duration - timeRemaining) / duration;
+	$: timeElapsed = duration - timeRemaining;
+	$: progress = timeElapsed / duration;
 
 	function clock() {
 		if (timePausedAt) return;
@@ -31,6 +32,8 @@
 		duration = Math.min(newDuration, 5999000); // max 99m59s
 		startTime = Date.now();
 		endTime = startTime + duration;
+		timeRemaining = endTime - Date.now();
+		timePausedAt = 0;
 	}
 
 	function pause() {
@@ -38,13 +41,12 @@
 	}
 
 	function unpause({ detail: newDuration }) {
+		endTime += Date.now() - timePausedAt;
+		timePausedAt = 0;
+
 		if (newDuration) {
 			setDuration(newDuration);
-		} else {
-			endTime += Date.now() - timePausedAt;
 		}
-
-		timePausedAt = 0;
 	}
 
 	onMount(() => {
@@ -59,4 +61,4 @@
 
 <TimerText {text} />
 <TimerEdit {text} on:edit={pause} on:save={unpause} />
-<TimerRing {progress} />
+<TimerRing {progress} {timeElapsed} introDuration={1000} />

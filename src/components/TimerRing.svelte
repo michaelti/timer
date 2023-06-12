@@ -1,10 +1,29 @@
 <script>
 	import { afterUpdate } from 'svelte';
+	import easeCubic from '../utils/easeCubic';
 
 	export let progress;
+	export let timeElapsed;
+	export let introDuration;
 
-	$: remainingOffset = Math.PI * 2 - progress * Math.PI;
-	$: elapsedOffset = Math.PI - progress * Math.PI;
+	let prevProgress;
+	let startFromProgress = 1;
+	$: displayProgress = progress;
+
+	$: {
+		if (progress < prevProgress) startFromProgress = prevProgress;
+		prevProgress = progress;
+	}
+
+	$: if (timeElapsed < introDuration) {
+		const start = startFromProgress;
+		const end = 2 + progress - startFromProgress;
+
+		displayProgress = easeCubic(timeElapsed, start, end, introDuration);
+	}
+
+	$: remainingOffset = Math.PI * 2 - displayProgress * Math.PI;
+	$: elapsedOffset = Math.PI - displayProgress * Math.PI;
 
 	let svgEl;
 	let uri =
