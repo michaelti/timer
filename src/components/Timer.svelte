@@ -4,6 +4,7 @@
 	import TimerRing from './TimerRing.svelte';
 	import timeToText from '../utils/timeToText';
 	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 
 	export let duration;
 	let startTime = Date.now();
@@ -29,7 +30,7 @@
 	}
 
 	function setDuration(newDuration) {
-		document.cookie = `custom-duration=${newDuration};max-age=31536000;SameSite=Strict`;
+		localStorage.setItem('custom-duration', newDuration);
 		duration = Math.min(newDuration, 5999000); // max 99m59s
 		startTime = Date.now();
 		endTime = startTime + duration;
@@ -54,6 +55,10 @@
 		animate();
 		setInterval(clock, 1000); // Force even when tab is inactive
 	});
+
+	$: if (!browser) {
+		text = '';
+	}
 </script>
 
 <svelte:head>
