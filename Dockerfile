@@ -1,8 +1,9 @@
-FROM node:alpine
+FROM node:alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
 RUN npm run build
-CMD npm start
-EXPOSE 3000
+
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
