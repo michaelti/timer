@@ -1,11 +1,12 @@
 import { browser } from '$app/environment';
 
 export function load() {
-	let num;
-
-	if (browser) {
-		num = Number(localStorage.getItem('custom-duration'));
+	if (!browser) {
+		return { duration: 0 };
 	}
 
-	return { duration: num || 300000 };
+	const fromURL = new URLSearchParams(window.location.search).get('t') * 60000;
+	const fromStorage = Number(localStorage.getItem('custom-duration'));
+
+	return { duration: fromURL || fromStorage || 300000 };
 }
