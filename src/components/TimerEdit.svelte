@@ -1,6 +1,5 @@
 <script>
 	import textToTime from '../utils/textToTime';
-	import isValidText from '../utils/isValidText';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
