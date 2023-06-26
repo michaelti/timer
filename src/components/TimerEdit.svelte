@@ -20,7 +20,7 @@
 		prevTypedText = '';
 	}
 
-	function handleInput(event) {
+	function handleInput() {
 		// If inserting text, add helpers
 		if (typedText.length > prevTypedText.length) {
 			// Helper: If colon entered first, add a 0 before it
