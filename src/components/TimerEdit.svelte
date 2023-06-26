@@ -1,65 +1,64 @@
 <script>
 	import textToTime from '../utils/textToTime';
 	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
 
 	export let text;
-	let newText = '';
-	let prevNewText = '';
-	$: newTime = textToTime(newText);
+
+	const dispatch = createEventDispatcher();
+
+	let typedText = '';
+	let prevTypedText = '';
 
 	function handleFocus() {
 		dispatch('edit');
 	}
 
 	function handleBlur() {
+		const newTime = textToTime(typedText);
 		dispatch('save', newTime);
-		newText = '';
+		typedText = '';
+		prevTypedText = '';
 	}
 
 	function handleInput(event) {
-		// TODO:
-		// - Make the mask better
-		// - Move the mask to a util
-
 		// If inserting text, add helpers
-		if (newText.length > prevNewText.length) {
+		if (typedText.length > prevTypedText.length) {
 			// Helper: If colon entered first, add a 0 before it
-			if (newText[0] === ':') {
-				newText = '0' + newText;
+			if (typedText[0] === ':') {
+				typedText = '0' + typedText;
 			}
 
 			// Helper: If first digit is a zero, add a colon
-			if (newText[0] === '0' && newText.length === 1) {
-				newText = newText + ':';
+			if (typedText[0] === '0' && typedText.length === 1) {
+				typedText = typedText + ':';
 			}
 
 			// Helper: If first two digits entered, add a colon
-			if (newText.length >= 2 && !newText.includes(':')) {
-				let modifiedString = newText.split('');
+			if (typedText.length >= 2 && !typedText.includes(':')) {
+				let modifiedString = typedText.split('');
 				modifiedString.splice(2, 0, ':');
 				modifiedString = modifiedString.join('');
-				newText = modifiedString;
+				typedText = modifiedString;
 			}
 		}
 
 		// Limit to digits and colons
-		newText = newText.replace(/[^0-9:]/g, '');
+		typedText = typedText.replace(/[^0-9:]/g, '');
 
 		// Limit to one colon
-		newText = newText.replace(/:(?=.*:)/g, '');
+		typedText = typedText.replace(/:(?=.*:)/g, '');
 
 		// Limit to two digits on each side of colon
-		if (newText.includes(':')) {
-			const split = newText.split(':');
+		if (typedText.includes(':')) {
+			const split = typedText.split(':');
 			let beforeColon = split[0] || '';
 			let afterColon = split[1] || '';
 			beforeColon = beforeColon.substring(0, 2);
 			afterColon = afterColon.substring(0, 2);
-			newText = beforeColon + ':' + afterColon;
+			typedText = beforeColon + ':' + afterColon;
 		}
 
-		prevNewText = newText;
+		prevTypedText = typedText;
 	}
 </script>
 
@@ -70,7 +69,7 @@
 		placeholder={text}
 		maxlength="5"
 		aria-label="Type the desired time, then press enter"
-		bind:value={newText}
+		bind:value={typedText}
 		on:input={handleInput}
 	/>
 </form>
