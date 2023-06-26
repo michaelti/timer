@@ -5,7 +5,7 @@ export default function textToTime(text) {
 	}
 
 	// If the input contains anything but numbers and colons, exit
-	if (/^[0-9:]*$/.test(text)) {
+	if (!/^[0-9:]*$/.test(text)) {
 		return;
 	}
 
